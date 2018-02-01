@@ -1,3 +1,5 @@
+[![Gitter chat](https://badges.gitter.im/father-brown/persistence/gitter.png)](https://gitter.im/father-brown/persistence/)
+
 # Father Brown Persistence
 
 ## Overview
