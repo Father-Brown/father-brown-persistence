@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/father-brown-persistence.iml" filepath="$PROJECT_DIR$/.idea/father-brown-persistence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../father_brown_beagle/.idea/father_brown_beagle.iml" filepath="$PROJECT_DIR$/../father_brown_beagle/.idea/father_brown_beagle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../scrapy_olx/.idea/scrapy_olx.iml" filepath="$PROJECT_DIR$/../scrapy_olx/.idea/scrapy_olx.iml" />
+    </modules>
+  </component>
+</project>

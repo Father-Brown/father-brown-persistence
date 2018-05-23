@@ -3,8 +3,7 @@ from py2neo import Graph
 from database.model.Model import Site
 from database.model.Model import News
 from database.model.Model import Tipo
-from preprocess.Process import Process
-from util.Character import removerAcentosECaracteresEspeciais
+
 
 class DataBase:
 
@@ -14,26 +13,26 @@ class DataBase:
 
     def get_all_news_from(self, site):
         # news=set()
-        all_news=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News)-[:E]-(t:Tipo) WHERE s.name="'+site+'" RETURN n,t').data()
+        all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News)-[:E]-(t:Tipo) WHERE s.name="'+site+'" RETURN n,t').data()
         dataSet=list()
-        for n in all_news:
-            dataSet.append((n['n']['title'], removerAcentosECaracteresEspeciais(n['n']['content']), n['t']['description']))
+        for n in all_types:
+            dataSet.append((n['n']['title'], n['n']['content']), n['t']['description'])
 
         return dataSet
 
 
     def get_all_news_from_no_class(self, site):
-        all_news=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News) WHERE s.name="'+site+'" RETURN n').data()
+        all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News) WHERE s.name="'+site+'" RETURN n').data()
         dataSet=list()
-        for n in all_news:
-            dataSet.append((n['n']['title'], removerAcentosECaracteresEspeciais(n['n']['content']), ''))
+        for n in all_types:
+            dataSet.append((n['n']['title'], n['n']['content']), '')
 
         return dataSet
 
     def get_news_by_title(self, title):
-        all_news=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News) WHERE n.title="'+title+'" RETURN n').data()
+        all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News) WHERE n.title="'+title+'" RETURN n').data()
         news = News()
-        for n in all_news:
+        for n in all_types:
             news.title=n['n']['title']
             news.url=news.title=n['n']['url']
 
@@ -45,6 +44,15 @@ class DataBase:
             dataSet.extend(self.get_all_news_from(s))
         return dataSet
 
+
+
+    def get_all_types(self):
+        all_types=self.graph.run('MATCH (t:Tipo) RETURN t').data()
+        # dataSet=list()
+        # for n in all_types:
+        #     dataSet.append((n['description']), '')
+
+        return all_types
 
 
     # def get_queue(self, site_url):
@@ -74,13 +82,14 @@ class DataBase:
         site.name=site_name
         site.url=url
         self.graph.push(site)
+        return site_name, url
 
     def save_news(self, site, url, title, sub_title, content, tipo):
         s=self.get_site(site)
         t = self.get_clazz(tipo)
         news =News()
-        news.site.add(s)
-        news.tipo.add(t)
+        # news.site.add(s)
+        # news.tipo.add(t)
         news.title=title
         news.sub_title=sub_title
         news.content=content
@@ -97,6 +106,7 @@ class DataBase:
         self.graph.run("MATCH (n) DETACH DELETE n")
         self.graph.run("MATCH (n) DETACH DELETE n")
 
+
     def delete(self):
         self.graph.delete_all();
         tipo = Tipo()
@@ -105,7 +115,12 @@ class DataBase:
         tipo = Tipo()
         tipo.description = 'True'
         self.graph.merge(tipo)
+        tipo = Tipo()
+        tipo.description = 'None'
+        self.graph.merge(tipo)
 
 # #
 # db = DataBase()
 # db.delete()
+# # db.get_all_news_from("teste")
+# db.install()
