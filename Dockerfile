@@ -1,14 +1,11 @@
-FROM python:3-alpine
+FROM ubuntu:latest
+RUN apt-get update -y
+RUN apt-get install -y python-pip python-dev build-essential
+COPY . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+COPY . /app
+EXPOSE 5000
+ENV FLASK_APP Main.py
+ENTRYPOINT ["python", "-m", "flask", "run", "--host=0.0.0.0"]
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-COPY requirements.txt /usr/src/app/
-
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-COPY . /usr/src/app
-
-EXPOSE 7474
-
-CMD ["ls"]

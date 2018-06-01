@@ -7,8 +7,9 @@ from database.model.Model import Tipo
 class DataBase:
 
     def __init__(self):
-        py2neo.authenticate("localhost:7474", "neo4j", "st1215")
-        self.graph = Graph("http://localhost:7474/db/data/")
+        host = "172.17.0.2"
+        py2neo.authenticate(host+":7474", "neo4j", "st1215")
+        self.graph = Graph("http://"+host+":7474/db/data/")
 
     def get_all_news_from(self, site):
         # news=set()

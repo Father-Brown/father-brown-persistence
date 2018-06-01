@@ -22,9 +22,17 @@ docker run \
 
 To run the server on a Docker container, please execute the following from the root directory:
 
-```bash
 # building the image
-docker build -t father-brown-persistence .
+
+```bash
+docker build -t father-brown-persistence:latest .
+
+```
 
 # starting up a container
-docker run father-brown-persistence
+
+```
+docker run -d --publish=5000:5000 father-brown-persistence
+
+```
+
