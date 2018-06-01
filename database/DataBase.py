@@ -4,7 +4,6 @@ from database.model.Model import Site
 from database.model.Model import News
 from database.model.Model import Tipo
 
-
 class DataBase:
 
     def __init__(self):
@@ -16,7 +15,7 @@ class DataBase:
         all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News)-[:E]-(t:Tipo) WHERE s.name="'+site+'" RETURN n,t').data()
         dataSet=list()
         for n in all_types:
-            dataSet.append((n['n']['title'], n['n']['content']), n['t']['description'])
+            dataSet.append((n['n']['title'], n['n']['content'], n['t']['description']))
 
         return dataSet
 
@@ -69,6 +68,7 @@ class DataBase:
 
     def get_site(self, name):
         sites = Site.select(self.graph).where(name=name)
+        print(sites)
         for site in sites:
             return site
 
@@ -88,13 +88,14 @@ class DataBase:
         s=self.get_site(site)
         t = self.get_clazz(tipo)
         news =News()
-        # news.site.add(s)
-        # news.tipo.add(t)
+        news.site.add(s)
+        news.tipo.add(t)
         news.title=title
         news.sub_title=sub_title
         news.content=content
         news.url=url
-        self.graph.merge(news)
+        self.graph.create(news)
+        return site, title
 
 
 
