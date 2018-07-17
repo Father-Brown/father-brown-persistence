@@ -12,15 +12,21 @@ class News(GraphObject):
     sub_title = Property()
     url = Property()
     site= RelatedFrom('Site', 'PUBLICOU')
+    autor= RelatedFrom('Autor', 'POR')
     tipo = RelatedTo(Tipo, 'E')
     content = Property()
 
-
+class Autor(GraphObject):
+    __primarykey__ = "name"
+    name = Property()    
+    news = RelatedTo(News)
+    site= RelatedFrom('Site', 'PUBLICOU NO')
 
 class Site(GraphObject):
     __primarykey__ = "name"
     name = Property()
     url = Property()
     news = RelatedTo(News)
+    # autor = RelatedTo(Autor)
 
 

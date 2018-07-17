@@ -45,9 +45,9 @@ def save_news():
     if request.is_json:
         content = request.get_json()
         site = siteResources.get_site(content['site'])
-        site_name, url= db.save_news(site, content['url'], content['title'], content['subTitle'],
-                                     content['content'], content['tipo'])
-    return jsonify(site_name, url)
+        url= db.save_news(site, content['url'], content['title'], content['subTitle'],
+                                     content['content'], content['autor'], content['tipo'])
+    return jsonify(url)
 @app.route("/news/<url>")
 def get_news_by_url(url):
     news = db.get_news_by_url(url)
