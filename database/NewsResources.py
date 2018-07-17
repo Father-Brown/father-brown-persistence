@@ -3,6 +3,7 @@ from py2neo import Graph
 from database.model.Model import Site
 from database.model.Model import News
 from database.model.Model import Autor
+from database.model.Model import Font
 from database.model.Model import Tipo
 
 class NewsResources:
@@ -71,15 +72,18 @@ class NewsResources:
         for tipo in tipos:
             return tipo
 
-    def save_news(self, site, url, title, sub_title, content, autor_name, tipo):
+    def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo, font_name, font_url):
         autor = self.save_autor(autor_name)
+        font = save_font(font_name, font_url)
+
         t = self.get_clazz(tipo)
         news =News()
         news.site.add(site)
         news.autor.add(autor)
         news.tipo.add(t)
         news.title=title
-        news.sub_title=sub_title
+        news.subTitle=subTitle
+        news.datePublished = datePublished
         news.content=content
         news.url=url
         self.graph.create(news)
@@ -92,6 +96,12 @@ class NewsResources:
         self.graph.push(autor)
         return autor
 
+    def save_font(self, name, url):
+        font = Font()
+        font.name=name
+        font.url=url
+        self.graph.push(font)
+        return font
 
     def create_rel(self, node1, node2):
         self.graph.create("(s:Site)-[:PUBLICOU]->(n:News)")

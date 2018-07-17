@@ -9,8 +9,9 @@ class Tipo(GraphObject):
 class News(GraphObject):
     __primarykey__ = "title"
     title = Property()
-    sub_title = Property()
+    subTitle = Property()
     url = Property()
+    datePublished = Property()
     site= RelatedFrom('Site', 'PUBLICOU')
     autor= RelatedFrom('Autor', 'POR')
     tipo = RelatedTo(Tipo, 'E')
@@ -19,6 +20,13 @@ class News(GraphObject):
 class Autor(GraphObject):
     __primarykey__ = "name"
     name = Property()    
+    news = RelatedTo(News)
+    site= RelatedFrom('Site', 'PUBLICOU NO')
+
+class Font(GraphObject):
+    __primarykey__ = "name"
+    name = Property()
+    url = Property()
     news = RelatedTo(News)
     site= RelatedFrom('Site', 'PUBLICOU NO')
 
