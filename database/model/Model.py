@@ -23,13 +23,6 @@ class Autor(GraphObject):
     news = RelatedTo(News)
     site= RelatedFrom('Site', 'PUBLICOU NO')
 
-class Font(GraphObject):
-    __primarykey__ = "name"
-    name = Property()
-    url = Property()
-    news = RelatedTo(News)
-    site= RelatedFrom('Site', 'PUBLICOU NO')
-
 class Site(GraphObject):
     __primarykey__ = "name"
     name = Property()

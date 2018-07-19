@@ -74,7 +74,7 @@ class NewsResources:
 
     def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo, font_name, font_url):
         autor = self.save_autor(autor_name)
-        font = save_font(font_name, font_url)
+        font = self.save_font(font_name, font_url)
 
         t = self.get_clazz(tipo)
         news =News()
