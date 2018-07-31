@@ -3,7 +3,6 @@ from py2neo import Graph
 from database.model.Model import Site
 from database.model.Model import News
 from database.model.Model import Autor
-from database.model.Model import Font
 from database.model.Model import Tipo
 
 class NewsResources:
@@ -12,15 +11,16 @@ class NewsResources:
         self.graph = graph
 
     def get_all_news_from(self, site):
-        # news=set()
-        all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News)-[:E]-(t:Tipo) WHERE s.name="'+site+'" RETURN s,n,t').data()
+        all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News), (n)-[:E]-(t:Tipo), (n)-[:POR]-(a:Autor) WHERE s.name="'+site+'" RETURN s,n,t,a limit 25').data()
         dataSet=list()
         for n in all_types:
             dataSet.append(
                 {
                     "site":n['s']['url'],
                     "title":n['n']['title'],
+                    "subTitle":n['n']['subTitle'],
                     "url":n['n']['url'],
+                    "datePublished":n['n']['datePublished'],
                     "content":n['n']['content'],
                     "target":n['t']['description']
                 })
@@ -72,9 +72,8 @@ class NewsResources:
         for tipo in tipos:
             return tipo
 
-    def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo, font_name, font_url):
+    def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo):
         autor = self.save_autor(autor_name)
-        font = self.save_font(font_name, font_url)
 
         t = self.get_clazz(tipo)
         news =News()
@@ -95,13 +94,6 @@ class NewsResources:
         autor.name=name        
         self.graph.push(autor)
         return autor
-
-    def save_font(self, name, url):
-        font = Font()
-        font.name=name
-        font.url=url
-        self.graph.push(font)
-        return font
 
     def create_rel(self, node1, node2):
         self.graph.create("(s:Site)-[:PUBLICOU]->(n:News)")
