@@ -10,27 +10,35 @@ siteResources = SiteResources(graph)
 config = Config(graph)
 config.install()
 
-# site = siteResources.get_site('Desconhecido')
-# db.save_news(
-#             site,
-#             'aaa',
-#             'Titulo',
-#             'eita',
-#             'Eita vei',
-#             'Abrilina',
-#             '',
-#             'None',
-#             None
-#             )
+site = siteResources.get_site('Desconhecido')
+db.save_news(
+            site,
+            'aaa',
+            'Titulo',
+            'eita',
+            'Eita vei',
+            'Abrilina',
+            '',
+            'None',
+            None
+            )
+news = db.get_news_by_url('aaa')
+db.save_news(
+            site,
+            'abbb',
+            'Titulo2',
+            'eitabbb',
+            'Eita veibbbb',
+            'Abrilina',
+            '',
+            'None',
+            news
+            )
+
 # news = db.get_news_by_url('aaa')
-# db.save_news(
-#             site,
-#             'abbb',
-#             'Titulo2',
-#             'eitabbb',
-#             'Eita veibbbb',
-#             'Abrilina',
-#             '',
-#             'None',
-#             news
-#             )
+# tipo = db.get_clazz('Fake')
+# news.tipo.clear()
+# news.tipo.add(tipo)
+# print(type(news.tipo))
+# db.classify_news(news)
+

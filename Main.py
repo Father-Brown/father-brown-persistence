@@ -74,6 +74,18 @@ def get_news_by_url(url):
     content = {"response": "Nenhuma noticia foi localizada"}
     return Response(content, status=404, mimetype='application/json')
 
+@app.route("/classify/news", methods=['POST'])
+def classify_news():
+    if request.is_json:
+        content = request.get_json()
+        news = db.get_news_by_url(content['url'])
+        tipo = db.get_clazz(content['tipo'])
+        news.tipo.clear()
+        news.tipo.add(tipo)
+        db.classify_news(news)
+    content = {"response": "Noticia salva"}
+    return Response(content, status=200, mimetype='application/json')
+
 @app.route("/alltype")
 def get_all_type():
     list= db.get_all_types()    

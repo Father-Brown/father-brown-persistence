@@ -65,9 +65,7 @@ class NewsResources:
         return all_types
 
     def get_clazz(self, name):
-        tipos = Tipo.select(self.graph).where(description=name)
-        for tipo in tipos:
-            return tipo
+        return Tipo.select(self.graph).where(description=name).first()
 
     def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo, fonte):
         autor = self.save_autor(autor_name)
@@ -87,6 +85,10 @@ class NewsResources:
         self.graph.create(news)
         return news
 
+    def classify_news(self,news):
+        tx = self.graph.begin()
+        self.graph.push(news)
+        tx.commit()
 
     def save_autor(self, name):
         autor = Autor()
