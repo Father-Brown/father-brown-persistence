@@ -1,5 +1,5 @@
 from database.NewsResources import NewsResources
-from database.SiteResources import SiteResouces 
+from database.SiteResources import SiteResources 
 import database.Neo4j as neo4j
 from flask import jsonify, request
 from flask import Response
@@ -9,7 +9,7 @@ import json
 app = Flask("resources")
 graph = neo4j.connection()
 db = NewsResources(graph)
-siteResources = SiteResouces(graph)
+siteResources = SiteResources(graph)
 
 @app.route("/site/<name>")
 def get_site(name):
@@ -45,7 +45,13 @@ def save_news():
     if request.is_json:
         content = request.get_json()
         site = siteResources.get_site(content['site'])
-        url= db.save_news(
+
+        if content['font'] != 'None':
+            newsFont = db.get_news_by_url(content['font'])
+        else:
+            newsFont = None
+
+        db.save_news(
             site,
             content['url'],
             content['title'],
@@ -53,9 +59,12 @@ def save_news():
             content['content'],
             content['autor'],
             content['datePublished'],
-            content['tipo']
+            content['tipo'],
+            newsFont
             )
-    return jsonify(url)
+    content = {"response": "Noticia salva"}
+    return Response(content, status=200, mimetype='application/json')
+
 @app.route("/news/<url>")
 def get_news_by_url(url):
     news = db.get_news_by_url(url)

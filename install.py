@@ -1,12 +1,36 @@
 from database.NewsResources import NewsResources
-from database.SiteResources import SiteResouces 
+from database.SiteResources import SiteResources 
+from database.Config import Config
 import database.Neo4j as neo4j
-# import json, requests
 
-# response = requests.get("http://localhost:5000/alltype")
-# print(response.content)
+
 graph = neo4j.connection()
 db = NewsResources(graph)
-db.delete()
-# list = db.get_all_news_from('semprequestione')
-# print(list)
+siteResources = SiteResources(graph)
+config = Config(graph)
+config.install()
+
+# site = siteResources.get_site('Desconhecido')
+# db.save_news(
+#             site,
+#             'aaa',
+#             'Titulo',
+#             'eita',
+#             'Eita vei',
+#             'Abrilina',
+#             '',
+#             'None',
+#             None
+#             )
+# news = db.get_news_by_url('aaa')
+# db.save_news(
+#             site,
+#             'abbb',
+#             'Titulo2',
+#             'eitabbb',
+#             'Eita veibbbb',
+#             'Abrilina',
+#             '',
+#             'None',
+#             news
+#             )

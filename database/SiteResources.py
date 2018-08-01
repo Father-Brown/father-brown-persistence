@@ -4,7 +4,7 @@ from database.model.Model import Site
 from database.model.Model import News
 from database.model.Model import Tipo
 
-class SiteResouces:
+class SiteResources:
 
     def __init__(self, graph):        
         self.graph = graph
@@ -18,10 +18,8 @@ class SiteResouces:
         return dataSet
 
     def get_site(self, name):
-        sites = Site.select(self.graph).where(name=name)
-        print(sites)
-        for site in sites:
-            return site
+        return  Site.select(self.graph).where(name=name).first()
+        
 
     def save_site(self, site_name, url):
         site=Site()

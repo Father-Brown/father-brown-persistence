@@ -1,5 +1,5 @@
 import py2neo
-from py2neo import Graph
+from py2neo import Graph, NodeSelector
 from database.model.Model import Site
 from database.model.Model import News
 from database.model.Model import Autor
@@ -9,6 +9,7 @@ class NewsResources:
 
     def __init__(self, graph):       
         self.graph = graph
+        self.selector = NodeSelector(graph)
 
     def get_all_news_from(self, site):
         all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News), (n)-[:E]-(t:Tipo), (n)-[:POR]-(a:Autor) WHERE s.name="'+site+'" RETURN s,n,t,a limit 25').data()
@@ -36,12 +37,8 @@ class NewsResources:
 
         return dataSet
 
-    def get_news_by_url(self, url):
-        all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News) WHERE n.url="'+url+'" RETURN n').data()
-        news = News()
-        for n in all_types:            
-            news.url=n['n']['url']
-        return news
+    def get_news_by_url(self, url):        
+        return  News.select(self.graph).where(url=url).first()
 
     def get_news_by_title(self, title):
         all_types=self.graph.run('MATCH (s:Site)-[:PUBLICOU]-(n:News) WHERE n.title="'+title+'" RETURN n').data()
@@ -72,7 +69,7 @@ class NewsResources:
         for tipo in tipos:
             return tipo
 
-    def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo):
+    def save_news(self, site, url, title, subTitle, content, autor_name, datePublished, tipo, fonte):
         autor = self.save_autor(autor_name)
 
         t = self.get_clazz(tipo)
@@ -85,8 +82,10 @@ class NewsResources:
         news.datePublished = datePublished
         news.content=content
         news.url=url
+        if fonte is not None:
+            news.fonte.add(fonte)
         self.graph.create(news)
-        return title
+        return news
 
 
     def save_autor(self, name):
@@ -94,23 +93,3 @@ class NewsResources:
         autor.name=name        
         self.graph.push(autor)
         return autor
-
-    def create_rel(self, node1, node2):
-        self.graph.create("(s:Site)-[:PUBLICOU]->(n:News)")
-
-    def install(self):
-        self.graph.run("MATCH (n) DETACH DELETE n")
-        self.graph.run("MATCH (n) DETACH DELETE n")
-
-
-    def delete(self):
-        self.graph.delete_all();
-        tipo = Tipo()
-        tipo.description='False'
-        self.graph.merge(tipo)
-        tipo = Tipo()
-        tipo.description = 'True'
-        self.graph.merge(tipo)
-        tipo = Tipo()
-        tipo.description = 'None'
-        self.graph.merge(tipo)
