@@ -15,8 +15,7 @@ class Tipo(GraphObject):
     description = Property()    
     news = RelatedFrom('News', Relationship.E)
 
-class News(GraphObject):
-    __primarykey__ = "title"
+class News(GraphObject):    
     title = Property()
     subTitle = Property()
     url = Property()
